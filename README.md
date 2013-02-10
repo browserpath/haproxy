@@ -18,8 +18,6 @@ Attributes
   haproxy process on, 0.0.0.0 (all addresses) by default
 * `node['haproxy']['incoming_port']` - sets the port on which haproxy
   listens
-* `node['haproxy']['member_port']` - the port that member systems will
-  be listening on, default 80
 * `node['haproxy']['app_server_role']` - used by the `app_lb` recipe
   to search for a specific role of member systems. Default
   `webserver`.
@@ -29,8 +27,6 @@ Attributes
   for ssl, default false
 * `node['haproxy']['ssl_incoming_address']` - sets the address to bind
   the haproxy on for SSL, 0.0.0.0 (all addresses) by default
-* `node['haproxy']['ssl_member_port']` - the port that member systems
-  will be listening on for ssl, default 8443
 * `node['haproxy']['ssl_incoming_port']` - sets the port on which
   haproxy listens for ssl, default 443
 * `node['haproxy']['httpchk']` - used by the `app_lb` recipe. If set,

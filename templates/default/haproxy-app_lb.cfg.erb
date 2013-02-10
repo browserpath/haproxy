@@ -28,7 +28,7 @@ frontend http
   #default_backend servers-http
   <% @pool_members.each_key do |app_server_role| -%>
   <% @node['haproxy']['domains'][app_server_role].each do |domain| %>
-  acl is_<%= app_server_role %> hdr_dom(host) -i <%= domain %>
+  acl is_<%= app_server_role %> hdr_beg(host) -i <%= domain %>
   <% end -%>
   use_backend <%= app_server_role %>-servers-http if is_<%= app_server_role %>
   <% end -%>
@@ -44,7 +44,7 @@ frontend https
 <% @pool_members.each_pair do |app_server_role,members| -%>
 backend <%= app_server_role %>-servers-http
   <% members.each do |member| -%>
-  server <%= member[:hostname] %> <%= member[:ipaddress] %>:<%= node['haproxy']['member_port'] %> weight 1 maxconn <%= node['haproxy']['member_max_connections'] %> check
+  server <%= member[:hostname] %> <%= member[:ipaddress] %>:<%= node['haproxy']['member_ports'][app_server_role] %> weight 1 maxconn <%= node['haproxy']['member_max_connections'] %> check
   <% end -%>
   <% if node["haproxy"]["httpchk"] -%>
   option httpchk <%= node["haproxy"]["httpchk"] %>
@@ -55,7 +55,7 @@ backend <%= app_server_role %>-servers-https
   mode tcp
   option ssl-hello-chk
   <% @members.each do |member| -%>
-  server <%= member[:hostname] %> <%= member[:ipaddress] %>:<%= node['haproxy']['ssl_member_port'] %> weight 1 maxconn <%= node['haproxy']['member_max_connections'] %> check
+  server <%= member[:hostname] %> <%= member[:ipaddress] %>:<%= node['haproxy']['ssl_member_ports'][app_server_role] %> weight 1 maxconn <%= node['haproxy']['member_max_connections'] %> check
   <% end -%>
   <% if node["haproxy"]["ssl_httpchk"] -%>
   option httpchk <%= node["haproxy"]["ssl_httpchk"] %>
